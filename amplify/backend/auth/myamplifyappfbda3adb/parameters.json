@@ -45,7 +45,19 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
-    "userPoolGroupList": [],
-    "dependsOn": []
+    "useDefault": "manual",
+    "userPoolGroupList": [
+        "admins",
+        "users"
+    ],
+    "dependsOn": [],
+    "thirdPartyAuth": false,
+    "userPoolGroups": true,
+    "adminQueries": false,
+    "triggers": "{}",
+    "hostedUI": false,
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": []
 }
