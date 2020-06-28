@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "myamplifyappd95f6f03_identitypool_d95f6f03",
+    "identityPoolName": "myamplifyappfbda3adb_identitypool_fbda3adb",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "myampld95f6f03",
-    "userPoolName": "myamplifyappd95f6f03_userpool_d95f6f03",
+    "resourceNameTruncated": "myamplfbda3adb",
+    "userPoolName": "myamplifyappfbda3adb_userpool_fbda3adb",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -12,7 +12,7 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your <Test_Project> Verification Code",
+    "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "myampld95f6f03_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "myamplfbda3adb_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "d95f6f03",
-    "resourceName": "myamplifyappd95f6f03",
+    "sharedId": "fbda3adb",
+    "resourceName": "myamplifyappfbda3adb",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -47,13 +47,5 @@
     },
     "useDefault": "default",
     "userPoolGroupList": [],
-    "dependsOn": [],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "triggers": "{}",
-    "hostedUI": false,
-    "parentStack": {
-        "Ref": "AWS::StackId"
-    },
-    "permissions": []
+    "dependsOn": []
 }
