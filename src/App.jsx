@@ -18,103 +18,17 @@ import {
   onDeleteNote as onNoteDelete,
 } from "./graphql/subscriptions";
 
+// our reducer and types
+import { initialState ,NotesReducer, OperationTypes } from './store/index';
+
+// utility functions
+import { allNotEmpty } from './utils/utils'
+
 // unique id generation
 import { v4 as uuid } from "uuid";
 
-// Required to apply the default styling
-import "@aws-amplify/ui/dist/style.css";
-
 const CLIENT_ID = uuid();
 
-const OperationTypes = {
-  ADD_NOTE: "add_notes",
-  UPDATE_NOTE: "update_notes",
-  DELETE_NOTE: "delete_notes",
-  SET_NOTES: "set_notes",
-  CLEAR_INPUTS: "clear_inputs",
-  UPDATE_INPUT: "update_input",
-  SET_ERRORED: "set_errored",
-  REMOVE_ERRORED: "remove_errored",
-};
-
-const initialState = {
-  name: "",
-  description: "",
-  notes: [],
-  Updatable: {
-    index: "",
-    name: "",
-    description: "",
-  },
-  errored: false,
-  errorMsg: "",
-};
-
-const NotesReducer = (state, action) => {
-  let result;
-  switch (action.type) {
-    case OperationTypes.ADD_NOTE:
-      result = { ...state, notes: [...state.notes, action.note] };
-      break;
-    case OperationTypes.UPDATE_NOTE:
-      result = {
-        ...state,
-        notes: state.notes.map((el) => (el.id === action.note.id ? action.note : el)),
-      };
-      break;
-    case OperationTypes.DELETE_NOTE:
-      result = {
-        ...state,
-        notes: state.notes.filter((el) => el.id !== action.note.id),
-      };
-      break;
-    case OperationTypes.SET_NOTES:
-      result = {
-        ...state,
-        notes: action.notes,
-      };
-      break;
-    case OperationTypes.CLEAR_INPUTS:
-      result = {
-        ...initialState,
-      };
-      break;
-    case OperationTypes.UPDATE_INPUT:
-      result = {
-        ...state,
-        [action.key]: action.value,
-      };
-      break;
-    case OperationTypes.UPDATE_UPDATABLES:
-      result = {
-        ...state,
-        Updatable: {
-          ...state.Updatable,
-          [action.key]: action.value,
-        },
-      };
-      break;
-    case OperationTypes.SET_ERRORED:
-      result = {
-        ...state,
-        errored: true,
-        errorMsg: action.error,
-      };
-      break;
-    case OperationTypes.REMOVE_ERRORED:
-      result = {
-        ...state,
-        errored: false,
-        errorMsg: "",
-      };
-      break;
-    default:
-      result = state;
-  }
-  return result;
-};
-
-const allNotEmpty = (...values) => values.every((el) => !!el);
 
 function App() {
   const [state, dispatch] = useReducer(NotesReducer, initialState);
