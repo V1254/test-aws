@@ -12,10 +12,19 @@ import {
   deleteNote as deleteNoteMutation,
   updateNote as updateNoteMutation,
 } from "./graphql/mutations";
+import {
+  onCreateNote as onNoteCreation,
+  onUpdateNote as onNoteUpdate,
+  onDeleteNote as onNoteDelete,
+} from "./graphql/subscriptions";
+
+// unique id generation
 import { v4 as uuid } from "uuid";
 
 // Required to apply the default styling
 import "@aws-amplify/ui/dist/style.css";
+
+const CLIENT_ID = uuid();
 
 const OperationTypes = {
   ADD_NOTE: "add_notes",
@@ -115,6 +124,58 @@ function App() {
     fetchData();
   }, []);
 
+  // setup the subscriptions
+  useEffect(() => {
+    let createSub, updateSub, deleteSub;
+
+    createSub = API.graphql(graphqlOperation(onNoteCreation)).subscribe({
+      next: (eventData) => {
+        // get the note created
+        const { onCreateNote: note } = eventData?.value?.data;
+        if(note.clientId !== CLIENT_ID) {
+          dispatch({
+            type: OperationTypes.ADD_NOTE,
+            note
+          })
+        }
+      },
+    });
+
+    updateSub = API.graphql(graphqlOperation(onNoteUpdate)).subscribe({
+      next: (eventData) => {
+        const { onUpdateNote: note } = eventData?.value?.data;
+        if (note.clientId !== CLIENT_ID) {
+          // only update our list if we arent the ones creating it
+          dispatch({
+            type: OperationTypes.UPDATE_NOTE,
+            note,
+          });
+        }
+      },
+    });
+
+    // same principal as above
+    deleteSub = API.graphql(graphqlOperation(onNoteDelete)).subscribe({
+      next: (eventData) => {
+        const { onDeleteNote: note } = eventData?.value?.data;
+        if(note.clientId !== CLIENT_ID) {
+          dispatch({
+            type: OperationTypes.DELETE_NOTE,
+            note
+          })
+        }
+      },
+    });
+
+    // clean up after ourselves on unmount
+    return () => {
+      createSub.unsubscribe();
+      updateSub.unsubscribe();
+      deleteSub.unsubscribe();
+    }
+
+  },[]);
+
   // Set up the subcriptions
   const fetchData = async () => {
     const apiData = await API.graphql(graphqlOperation(notesList));
@@ -144,7 +205,7 @@ function App() {
       return;
     }
 
-    const note = { id: uuid(), name, description };
+    const note = { id: uuid(), clientId: CLIENT_ID, name, description };
     const notes = [...state.notes, note];
 
     // reset our form values
